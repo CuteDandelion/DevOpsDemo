@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    environment {
+        REGISTRY = 'docker.io/cutedandelion'
+        REPOSITORY = 'widgetario'
+        BUILD_VERSION = "v1-${BUILD_NUMBER}"
+        PRODUCTS_DB_IMAGE = "${REGISTRY}/${REPOSITORY}/products-db:${BUILD_VERSION}"
+        PRODUCTS_API_IMAGE = "${REGISTRY}/${REPOSITORY}/products-api:${BUILD_VERSION}"
+        STOCK_API_IMAGE = "${REGISTRY}/${REPOSITORY}/stock-api:${BUILD_VERSION}"
+        WEB_IMAGE = "${REGISTRY}/${REPOSITORY}/web:${BUILD_VERSION}"
+        DEPLOY_REPO = 'git@github.com:CuteDandelion/DevOpsDemo.git'
+        DEPLOY_PATH = 'environments/test/widgetario'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
+                    bat "docker login -u %REGISTRY_USER% -p %REGISTRY_PASSWORD%"
+                }
+            }
+        }
+
+        stage('Build & Push Images') {
+            steps {
+                script {
+                    def builds = [
+                        [context: './project/src/db/postgres-replicated', image: PRODUCTS_DB_IMAGE],
+                        [context: './project/src/products-api/java', image: PRODUCTS_API_IMAGE],
+                        [context: './project/src/stock-api/golang', image: STOCK_API_IMAGE],
+                        [context: './project/src/web/dotnet', image: WEB_IMAGE]
+                    ]
+                    builds.each { svc ->
+                        bat """
+                            docker build -t ${svc.image} ${svc.context}
+                            docker push ${svc.image}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Update GitOps Repo for ArgoCD') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'github-deploy-key', keyFileVariable: 'SSH_KEY')]) {
+                    bat "rmdir /s /q deploy-repo || echo Clean"
+                    bat "git clone ${DEPLOY_REPO} deploy-repo"
+                    dir('deploy-repo') {
+                        bat """
+                            powershell -Command "(Get-Content ${DEPLOY_PATH}/values.yaml) `
+                                -replace 'pdbImage:.*', 'pdbImage: ${PRODUCTS_DB_IMAGE}' `
+                                -replace 'papiImage:.*', 'papiImage: ${PRODUCTS_API_IMAGE}' `
+                                -replace 'sapiImage:.*', 'sapiImage: ${STOCK_API_IMAGE}' `
+                                -replace 'webGreenImage:.*', 'webGreenImage: ${WEB_IMAGE}' `
+                                | Set-Content ${DEPLOY_PATH}/values.yaml"
+                        """
+
+                        bat """
+                            git config user.name "jenkins-bot"
+                            git config user.email "jenkins@ci.local"
+                            git add ${DEPLOY_PATH}/values.yaml
+                            git commit -m "Update image tags ${BUILD_VERSION}"
+                            git push origin main
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Jenkins build complete. ArgoCD will detect and sync changes."
+        }
+        failure {
+            echo "❌ Build failed. Check Jenkins logs."
+        }
+    }
+}
