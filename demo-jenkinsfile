@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = 'docker.io/cutedandelion'
-        REPOSITORY = 'widgetario'
+        REGISTRY = 'docker.io'
+        REPOSITORY = 'cutedandelion/widgetario'
         BUILD_VERSION = "v1-${BUILD_NUMBER}"
         PRODUCTS_DB_IMAGE = "${REGISTRY}/${REPOSITORY}/products-db:${BUILD_VERSION}"
         PRODUCTS_API_IMAGE = "${REGISTRY}/${REPOSITORY}/products-api:${BUILD_VERSION}"
