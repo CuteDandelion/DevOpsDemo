@@ -50,7 +50,11 @@ pipeline {
         stage('Update GitOps Repo for ArgoCD') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'github-deploy-key', keyFileVariable: 'SSH_KEY')]) {
-                    bat "rmdir /s /q deploy-repo || echo Clean"
+                    bat """
+                         rmdir /s /q deploy-repo
+                         if %ERRORLEVEL% NEQ 0 echo "Clean. No Build Update. Creating new deployment Helm."
+                         exit /b 0
+                    """
                     bat "git clone ${DEPLOY_REPO} deploy-repo"
                     dir('deploy-repo') {
                         bat """
