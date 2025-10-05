@@ -20,6 +20,7 @@ metadata:
 data:
   POSTGRES_PRIMARY_NAME: {{ .Release.Name }}-pdb-0
   POSTGRES_PRIMARY_FQDN: {{ .Release.Name }}-pdb-0.{{ .Release.Name }}-pdb.{{ .Release.Namespace }}.svc.cluster.local
+  POSTGRES_SECONDARY_FQDN: {{ .Release.Name }}-pdb-1.{{ .Release.Name }}-pdb.{{ .Release.Namespace }}.svc.cluster.local
 ---
 apiVersion: v1
 kind: Secret
