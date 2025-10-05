@@ -56,6 +56,9 @@ spec:
       containers:
         - name: app
           image: {{ .Values.pdbImage }}
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/dbfiles
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-pdb-env
@@ -88,7 +91,7 @@ spec:
           {{- end }} 
           volumeMounts:
             - name: data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql/data/dbfiles
   volumeClaimTemplates:
   - metadata:
       name: data
