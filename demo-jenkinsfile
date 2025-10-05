@@ -57,13 +57,9 @@ pipeline {
                     """
                     bat """git -c core.sshCommand="ssh -i '%SSH_KEY%' -o StrictHostKeyChecking=no" clone ${DEPLOY_REPO} deploy-repo"""
                     dir('deploy-repo') {
-                        bat """
-                            powershell -Command "(Get-Content ${DEPLOY_PATH}/values.yaml) `
-                                -replace 'pdbImage:.*', 'pdbImage: ${PRODUCTS_DB_IMAGE}' `
-                                -replace 'papiImage:.*', 'papiImage: ${PRODUCTS_API_IMAGE}' `
-                                -replace 'sapiImage:.*', 'sapiImage: ${STOCK_API_IMAGE}' `
-                                -replace 'webGreenImage:.*', 'webGreenImage: ${WEB_IMAGE}' `
-                                | Set-Content ${DEPLOY_PATH}/values.yaml"
+                        bat """                         
+                            powershell -Command "(Get-Content '${DEPLOY_PATH}/values.yaml') -replace 'pdbImage:.*','pdbImage: ${PRODUCTS_DB_IMAGE}' -replace 'papiImage:.*','papiImage: ${PRODUCTS_API_IMAGE}' -replace 'sapiImage:.*','sapiImage: ${STOCK_API_IMAGE}' -replace 'webGreenImage:.*','webGreenImage: ${WEB_IMAGE}' | Set-Content '${DEPLOY_PATH}/values.yaml'"
+
                         """
 
                         bat """
