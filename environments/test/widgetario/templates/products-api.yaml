@@ -82,7 +82,7 @@ spec:
               path: /
               port: http
             periodSeconds: 20
-            failureThreshold: 1
+            failureThreshold: 3
           {{- end }}
           {{- if eq .Values.includeLiveness true }}
           livenessProbe:

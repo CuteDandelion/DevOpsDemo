@@ -6,7 +6,7 @@ includeResources: true
 
 # Products API ("papi")
 papiImage: docker.io/cutedandelion/products-api:v1-18
-papiReplicaCount: 2
+papiReplicaCount: 1
 
 # Products database ("pdb")
 pdbImage: docker.io/cutedandelion/products-db:v1-18
@@ -17,7 +17,7 @@ pdbPassword: h4kkath0n
 
 # Stock API ("sapi")
 sapiImage: docker.io/cutedandelion/stock-api:v1-18
-sapiReplicaCount: 4
+sapiReplicaCount: 2
 
 # Website ("web")
 webLoggerImage: alpine:3.14
