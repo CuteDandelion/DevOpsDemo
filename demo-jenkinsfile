@@ -55,8 +55,7 @@ pipeline {
                          if %ERRORLEVEL% NEQ 0 echo "Clean. No Build Update. Creating new deployment Helm."
                          exit /b 0
                     """
-                    bat "set GIT_SSH_COMMAND=ssh -i %SSH_KEY% -v -o StrictHostKeyChecking=no"
-                    bat "git clone ${DEPLOY_REPO} deploy-repo"
+                    bat "git -c core.sshCommand="ssh -i %SSH_KEY% -o StrictHostKeyChecking=no" clone ${DEPLOY_REPO} deploy-repo"
                     dir('deploy-repo') {
                         bat """
                             powershell -Command "(Get-Content ${DEPLOY_PATH}/values.yaml) `
