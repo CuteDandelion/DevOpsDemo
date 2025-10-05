@@ -1,5 +1,5 @@
 # common config
-domainName: http://widgetario.52.226.130.117.nip.io
+domainName: widgetario.52.226.130.117.nip.io
 includeReadiness: true
 includeLiveness: true
 includeResources: true
