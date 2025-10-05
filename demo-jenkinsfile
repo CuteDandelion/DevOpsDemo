@@ -50,7 +50,6 @@ pipeline {
         stage('Update GitOps Repo for ArgoCD') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'github-deploy-key', keyFileVariable: 'SSH_KEY')]) {
-                    bat """ set GIT_SSH_COMMAND=ssh -i '%SSH_KEY%' -o StrictHostKeyChecking=no """
                     bat """
                          rmdir /s /q deploy-repo
                          if %ERRORLEVEL% NEQ 0 echo "Clean. No Build Update. Creating new deployment Helm."
@@ -68,7 +67,7 @@ pipeline {
                             git config user.email "jenkins@ci.local"
                             git add ${DEPLOY_PATH}/values.yaml
                             git commit -m "Update image tags ${BUILD_VERSION}"
-                            git push origin main
+                            git  -c core.sshCommand="ssh -i '%SSH_KEY%' -o StrictHostKeyChecking=no" push origin main
                         """
                     }
                 }
