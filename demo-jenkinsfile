@@ -55,10 +55,6 @@ pipeline {
                          if %ERRORLEVEL% NEQ 0 echo "Clean. No Build Update. Creating new deployment Helm."
                          exit /b 0
                     """
-                    bat '''
-                         echo SSH key path: %SSH_KEY%
-                         type "%SSH_KEY%"
-                    '''
                     bat """git -c core.sshCommand="ssh -i '%SSH_KEY%' -o StrictHostKeyChecking=no" clone ${DEPLOY_REPO} deploy-repo"""
                     dir('deploy-repo') {
                         bat """
