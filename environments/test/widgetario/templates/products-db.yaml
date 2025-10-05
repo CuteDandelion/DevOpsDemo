@@ -91,7 +91,7 @@ spec:
           {{- end }} 
           volumeMounts:
             - name: data
-              mountPath: /var/lib/postgresql/data/dbfiles
+              mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
   - metadata:
       name: data
