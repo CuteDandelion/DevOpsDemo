@@ -5,18 +5,18 @@ includeLiveness: true
 includeResources: true
 
 # Products API ("papi")
-papiImage: widgetario/products-api:21.03
+papiImage: docker.io/cutedandelion/products-api:v1-17
 papiReplicaCount: 2
 
 # Products database ("pdb")
-pdbImage: widgetario/products-db-replicated:21.03
+pdbImage: docker.io/cutedandelion/products-db:v1-17
 pdbReplicaCount: 2
 pdbStorageSize: 50Mi
 pdbUsername: postgres
 pdbPassword: h4kkath0n
 
 # Stock API ("sapi")
-sapiImage: widgetario/stock-api:21.03
+sapiImage: docker.io/cutedandelion/stock-api:v1-17
 sapiReplicaCount: 4
 
 # Website ("web")
