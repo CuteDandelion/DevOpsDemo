@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: widgetario-test
+  labels:
+    kubernetes.courselabs.co: hackathon
+    app: widgetario
+spec:
+  source:
+    repoURL: https://github.com/CuteDandelion/DevOpsDemo.git
+    targetRevision: main
+    path: environments/test/widgetario
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: widgetario
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
