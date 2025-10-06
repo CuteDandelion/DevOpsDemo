@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-test
+  labels:
+    kubernetes.courselabs.co: hackathon
+    app: monitoring
+spec:
+  source:
+    repoURL: https://github.com/CuteDandelion/DevOpsDemo.git
+    targetRevision: main
+    path: monitoring-stack/
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

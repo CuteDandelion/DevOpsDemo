@@ -1,0 +1,50 @@
+namespace: monitoring
+
+prometheus:
+  image: prom/prometheus:v2.52.0
+  replicas: 1
+  service:
+    port: 9090
+  ingress:
+    enabled: true
+    className: nginx   # 👈 your ingress class (nginx, traefik, etc.)
+    host: prometheus.monitoring.52.226.130.117.nip.io
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    tls:
+      enabled: false
+      secretName: prometheus-tls
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  storage:
+    enabled: true
+    size: 2Gi
+    accessModes: ["ReadWriteOnce"]
+
+grafana:
+  image: grafana/grafana:11.2.0
+  replicas: 1
+  service:
+    port: 3000
+  ingress:
+    enabled: true
+    className: nginx
+    host: grafana.monitoring.52.226.130.117.nip.io
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    tls:
+      enabled: false
+      secretName: grafana-tls
+  adminUser: admin
+  adminPassword: admin123
+  persistence:
+    enabled: true
+    size: 2Gi
+  dashboards:
+    enabled: true
+    prometheusDatasource: http://prometheus:9090

@@ -1,0 +1,30 @@
+{{- if .Values.prometheus.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: {{ .Values.namespace }}
+  annotations:
+{{- range $key, $value := .Values.prometheus.ingress.annotations }}
+    {{ $key }}: "{{ $value }}"
+{{- end }}
+spec:
+  ingressClassName: {{ .Values.prometheus.ingress.className }}
+  rules:
+    - host: {{ .Values.prometheus.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: {{ .Values.prometheus.service.port }}
+  {{- if .Values.prometheus.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.prometheus.ingress.host }}
+      secretName: {{ .Values.prometheus.ingress.tls.secretName }}
+  {{- end }}
+{{- end }}
