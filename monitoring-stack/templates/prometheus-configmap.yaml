@@ -12,11 +12,14 @@ data:
       - job_name: 'app'
         kubernetes_sd_configs:
         - role: pod 
+          namespaces:
+            names:
+              - widgetario     
         relabel_configs:
         - source_labels: 
             - __meta_kubernetes_namespace
           action: keep
-          regex: default
+          regex: widgetario
         - source_labels: 
             - __meta_kubernetes_pod_annotationpresent_prometheus_io_scrape
             - __meta_kubernetes_pod_annotation_prometheus_io_scrape
