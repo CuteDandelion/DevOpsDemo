@@ -9,5 +9,5 @@ spec:
     app: grafana
   ports:
     - name: http
-      port: {{ .Values.grafana.service.port }}
-      targetPort: {{ .Values.grafana.service.port }}
+      port: {{ .Values.grafanaPort }}
+      targetPort: {{ .Values.grafanaPort }}

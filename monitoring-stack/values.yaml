@@ -1,50 +1,21 @@
+# --- Common ---
 namespace: monitoring
+ingressClassName: nginx
+domainName: 172.203.139.161.nip.io   
+enableTLS: false                     
+tlsSecretName: ""
 
-prometheus:
-  image: prom/prometheus:v2.52.0
-  replicas: 1
-  service:
-    port: 9090
-  ingress:
-    enabled: true
-    className: nginx   # 👈 your ingress class (nginx, traefik, etc.)
-    host: prometheus.monitoring.52.226.130.117.nip.io
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    tls:
-      enabled: false
-      secretName: prometheus-tls
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 200m
-      memory: 256Mi
-  storage:
-    enabled: true
-    size: 2Gi
-    accessModes: ["ReadWriteOnce"]
+# --- Prometheus ---
+prometheusImage: prom/prometheus:v2.52.0
+prometheusReplicas: 1
+prometheusPort: 9090
+prometheusHost: prometheus.{{ .Values.domainName }}
+prometheusResources: true
 
-grafana:
-  image: grafana/grafana:11.2.0
-  replicas: 1
-  service:
-    port: 3000
-  ingress:
-    enabled: true
-    className: nginx
-    host: grafana.monitoring.52.226.130.117.nip.io
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    tls:
-      enabled: false
-      secretName: grafana-tls
-  adminUser: admin
-  adminPassword: admin123
-  persistence:
-    enabled: true
-    size: 2Gi
-  dashboards:
-    enabled: true
-    prometheusDatasource: http://prometheus:9090
+# --- Grafana ---
+grafanaImage: grafana/grafana:11.2.0
+grafanaReplicas: 1
+grafanaPort: 3000
+grafanaHost: grafana.{{ .Values.domainName }}
+grafanaAdminUser: admin
+grafanaAdminPassword: admin123

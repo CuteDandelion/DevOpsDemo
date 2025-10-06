@@ -1,17 +1,14 @@
-{{- if .Values.prometheus.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prometheus
   namespace: {{ .Values.namespace }}
   annotations:
-{{- range $key, $value := .Values.prometheus.ingress.annotations }}
-    {{ $key }}: "{{ $value }}"
-{{- end }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: {{ .Values.prometheus.ingress.className }}
+  ingressClassName: {{ .Values.ingressClassName }}
   rules:
-    - host: {{ .Values.prometheus.ingress.host }}
+    - host: prometheus.{{ .Values.domainName }}
       http:
         paths:
           - path: /
@@ -20,11 +17,10 @@ spec:
               service:
                 name: prometheus
                 port:
-                  number: {{ .Values.prometheus.service.port }}
-  {{- if .Values.prometheus.ingress.tls.enabled }}
+                  number: {{ .Values.prometheusPort }}
+{{- if .Values.enableTLS }}
   tls:
     - hosts:
-        - {{ .Values.prometheus.ingress.host }}
-      secretName: {{ .Values.prometheus.ingress.tls.secretName }}
-  {{- end }}
+        - prometheus.{{ .Values.domainName }}
+      secretName: {{ .Values.tlsSecretName }}
 {{- end }}

@@ -10,8 +10,5 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: {{ .Values.grafana.dashboards.prometheusDatasource }}
-      basicAuth: false
-      version: 1
-      editable: true
+      url: http://prometheus:{{ .Values.prometheusPort }}
       isDefault: true

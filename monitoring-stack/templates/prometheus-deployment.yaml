@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: prometheus
   namespace: {{ .Values.namespace }}
-  labels:
-    app: prometheus
 spec:
-  replicas: {{ .Values.prometheus.replicas }}
+  replicas: {{ .Values.prometheusReplicas }}
   selector:
     matchLabels:
       app: prometheus
@@ -17,19 +15,12 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: {{ .Values.prometheus.image }}
+          image: {{ .Values.prometheusImage }}
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
           ports:
-            - containerPort: {{ .Values.prometheus.service.port }}
-          resources:
-            limits:
-              cpu: {{ .Values.prometheus.resources.limits.cpu }}
-              memory: {{ .Values.prometheus.resources.limits.memory }}
-            requests:
-              cpu: {{ .Values.prometheus.resources.requests.cpu }}
-              memory: {{ .Values.prometheus.resources.requests.memory }}
+            - containerPort: {{ .Values.prometheusPort }}
           volumeMounts:
             - name: prometheus-config
               mountPath: /etc/prometheus

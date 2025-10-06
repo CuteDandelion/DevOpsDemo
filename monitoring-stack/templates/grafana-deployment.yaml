@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: grafana
   namespace: {{ .Values.namespace }}
-  labels:
-    app: grafana
 spec:
-  replicas: {{ .Values.grafana.replicas }}
+  replicas: {{ .Values.grafanaReplicas }}
   selector:
     matchLabels:
       app: grafana
@@ -17,14 +15,14 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: {{ .Values.grafana.image }}
-          ports:
-            - containerPort: {{ .Values.grafana.service.port }}
+          image: {{ .Values.grafanaImage }}
           env:
             - name: GF_SECURITY_ADMIN_USER
-              value: {{ .Values.grafana.adminUser }}
+              value: {{ .Values.grafanaAdminUser }}
             - name: GF_SECURITY_ADMIN_PASSWORD
-              value: {{ .Values.grafana.adminPassword }}
+              value: {{ .Values.grafanaAdminPassword }}
+          ports:
+            - containerPort: {{ .Values.grafanaPort }}
           volumeMounts:
             - name: grafana-config
               mountPath: /etc/grafana/provisioning/datasources

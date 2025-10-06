@@ -9,5 +9,5 @@ spec:
     app: prometheus
   ports:
     - name: http
-      port: {{ .Values.prometheus.service.port }}
-      targetPort: {{ .Values.prometheus.service.port }}
+      port: {{ .Values.prometheusPort }}
+      targetPort: {{ .Values.prometheusPort }}
