@@ -2,6 +2,9 @@ elasticsearch:
   image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
   replicas: 1
   storage: 5Gi
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
 
 logstash:
   image: docker.elastic.co/logstash/logstash:8.12.0

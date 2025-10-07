@@ -13,8 +13,12 @@ spec:
       labels:
         app: elasticsearch
     spec:
+      securityContext:
+        fsGroup: {{ .Values.elasticsearch.securityContext.fsGroup }}
       containers:
         - name: elasticsearch
+          securityContext:
+            runAsUser: {{ .Values.elasticsearch.securityContext.runAsUser }}
           image: {{ .Values.elasticsearch.image }}
           ports:
             - containerPort: 9200
