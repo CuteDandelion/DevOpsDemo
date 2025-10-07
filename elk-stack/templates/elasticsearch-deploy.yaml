@@ -1,9 +1,13 @@
+# ==========================
+# Elasticsearch StatefulSet
+# ==========================
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: elasticsearch
   namespace: logging
 spec:
+  serviceName: elasticsearch
   replicas: {{ .Values.elasticsearch.replicas }}
   selector:
     matchLabels:
@@ -19,40 +23,58 @@ spec:
         - name: elasticsearch
           securityContext:
             runAsUser: {{ .Values.elasticsearch.securityContext.runAsUser }}
-          image: {{ .Values.elasticsearch.image }}
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 9200
+            - name: http
+              containerPort: 9200
           env:
             - name: discovery.type
               value: single-node
+            - name: ES_JAVA_OPTS
+              value: "-Xms1g -Xmx1g"
+            - name: ES_LOG_STYLE
+              value: file
+          resources:
+            requests:
+              cpu: 500m
+              memory: 600Mi
+            limits:
+              cpu: 1
+              memory: 800Mi
           volumeMounts:
             - name: elastic-data
               mountPath: /usr/share/elasticsearch/data
+            - name: elastic-tmp
+              mountPath: /tmp
       volumes:
-        - name: elastic-data
-          persistentVolumeClaim:
-            claimName: elasticsearch-pvc
+        - name: elastic-tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: elastic-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: managed-csi   # Uses Azure Managed Disk
+        resources:
+          requests:
+            storage: 50Gi
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: elasticsearch-pvc
-  namespace: logging
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: {{ .Values.elasticsearch.storage }}
----
+# =====================
+# Elasticsearch Service
+# =====================
 apiVersion: v1
 kind: Service
 metadata:
   name: elasticsearch
   namespace: logging
+  labels:
+    app: elasticsearch
 spec:
   type: ClusterIP
   ports:
-    - port: 9200
+    - name: http
+      port: 9200
       targetPort: 9200
   selector:
     app: elasticsearch
