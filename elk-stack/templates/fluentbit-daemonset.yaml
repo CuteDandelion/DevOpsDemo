@@ -21,10 +21,10 @@ spec:
           image: {{ .Values.fluentbit.image }}
           resources:
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 200Mi
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 100Mi
           volumeMounts:
             - name: varlog
