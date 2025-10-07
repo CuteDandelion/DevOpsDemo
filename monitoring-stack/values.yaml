@@ -1,7 +1,7 @@
 # --- Common ---
 namespace: monitoring
 ingressClassName: nginx
-domainName: 172.191.149.150.nip.io   
+domainName: 4.246.205.17.nip.io   
 enableTLS: false                     
 tlsSecretName: ""
 

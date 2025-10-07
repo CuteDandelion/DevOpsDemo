@@ -16,7 +16,7 @@ kibana:
   ingress:
     enabled: true
     className: nginx
-    host: kibana.172.191.149.150.nip.io
+    host: kibana.4.246.205.17.nip.io
 
 fluentbit:
   image: cr.fluentbit.io/fluent/fluent-bit:3.0.4
