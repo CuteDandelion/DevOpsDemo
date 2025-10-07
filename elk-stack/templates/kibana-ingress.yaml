@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kibana
+  namespace: logging
   annotations:
     kubernetes.io/ingress.class: {{ .Values.kibana.ingress.className }}
 spec:

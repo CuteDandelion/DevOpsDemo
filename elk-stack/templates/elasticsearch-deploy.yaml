@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: elasticsearch
+  namespace: logging
 spec:
   replicas: {{ .Values.elasticsearch.replicas }}
   selector:
@@ -32,6 +33,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: elasticsearch-pvc
+  namespace: logging
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
@@ -42,6 +44,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: elasticsearch
+  namespace: logging
 spec:
   type: ClusterIP
   ports:
