@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging-test
+  labels:
+    kubernetes.courselabs.co: hackathon
+    app: logging
+spec:
+  source:
+    repoURL: https://github.com/CuteDandelion/DevOpsDemo.git
+    targetRevision: main
+    path: elk-stack/
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

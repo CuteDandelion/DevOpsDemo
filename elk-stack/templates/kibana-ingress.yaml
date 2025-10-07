@@ -1,0 +1,20 @@
+{{- if .Values.kibana.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kibana
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.kibana.ingress.className }}
+spec:
+  rules:
+    - host: {{ .Values.kibana.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601
+{{- end }}

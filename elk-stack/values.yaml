@@ -1,0 +1,20 @@
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+  replicas: 1
+  storage: 5Gi
+
+logstash:
+  image: docker.elastic.co/logstash/logstash:8.12.0
+  replicas: 1
+
+kibana:
+  image: docker.elastic.co/kibana/kibana:8.12.0
+  replicas: 1
+  ingress:
+    enabled: true
+    className: nginx
+    host: kibana.172.203.139.161.nip.io
+
+fluentbit:
+  image: cr.fluentbit.io/fluent/fluent-bit:3.0.4
+  namespace: widgetario
