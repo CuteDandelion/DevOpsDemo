@@ -35,6 +35,8 @@ spec:
               value: "-Xms1g -Xmx1g"
             - name: ES_LOG_STYLE
               value: file
+            - name: xpack.security.enabled
+              value: "false"
           resources:
             requests:
               cpu: 500m
