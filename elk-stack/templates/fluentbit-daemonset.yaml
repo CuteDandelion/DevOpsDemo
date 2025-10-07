@@ -14,7 +14,7 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      serviceAccountName: default
+      serviceAccountName: fluent-bit
       terminationGracePeriodSeconds: 10
       containers:
         - name: fluent-bit

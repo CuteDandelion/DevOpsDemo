@@ -31,7 +31,6 @@ data:
         Keep_Log            Off
         K8S-Logging.Parser  On
         K8S-Logging.Exclude Off
-        Namespace           {{ .Values.fluentbit.namespace }}
 
     [OUTPUT]
         Name  forward
