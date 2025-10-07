@@ -33,7 +33,8 @@ data:
         K8S-Logging.Exclude Off
 
     [OUTPUT]
-        Name  forward
+        Name  tcp
         Match kube.*
         Host  logstash
         Port  5044
+        Format json_lines
