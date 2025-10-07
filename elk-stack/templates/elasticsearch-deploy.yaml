@@ -38,10 +38,10 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 600Mi
+              memory: 2Gi
             limits:
               cpu: 1
-              memory: 800Mi
+              memory: 4Gi
           volumeMounts:
             - name: elastic-data
               mountPath: /usr/share/elasticsearch/data
